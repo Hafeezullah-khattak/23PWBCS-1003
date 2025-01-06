@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
-import authRoutes from "./routes/auth.js";
+import authRoutes from "../routes/auth.js"; // Adjust path for auth.js
 
 // Load environment variables
 dotenv.config();
@@ -24,14 +24,10 @@ mongoose
   .then(() => console.log("Connected to MongoDB!"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-// Root Route (this is the new addition)
-app.get("/", (req, res) => {
-  res.send("Welcome to the Signup & Signin API");
-});
-
 // Routes
 app.use("/api", authRoutes);
 
-// Start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Vercel serverless function
+export default (req, res) => {
+  app(req, res);
+};
