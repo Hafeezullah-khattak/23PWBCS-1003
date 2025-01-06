@@ -3,12 +3,10 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
-import authRoutes from "../routes/auth.js"; // Make sure the path to auth.js is correct
+import authRoutes from "../routes/auth.js"; // Adjust path to auth.js
 
-// Load environment variables
-dotenv.config();
+dotenv.config(); // Load environment variables
 
-// Create Express app
 const app = express();
 
 // Middleware
@@ -21,13 +19,21 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("Connected to MongoDB!"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+  .then(() => {
+    console.log("Connected to MongoDB!");
+    // Start the server after successful MongoDB connection
+    app.listen(5000, () => {
+      console.log("Server running on port 5000");
+    });
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+  });
 
 // Routes
 app.use("/api", authRoutes);
 
-// This is the correct export for Vercel serverless function
+// Export for serverless if deploying to Vercel
 export default (req, res) => {
   app(req, res); // Call Express app as a serverless function
 };
